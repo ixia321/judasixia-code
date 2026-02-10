@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><3<3<3 - JudasIxia Code</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+        
+        body {
+            background: 
+            url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%238B5A2B' fill-opacity='0.5'%3E%3Ccircle cx='30' cy='30' r='5'/%3E%3C/g%3E%3C/svg%3E"),
+            linear-gradient(135deg, #FFF0F5 0%, #FFE4E9 100%);
+            background-size: auto, 100% 100%; /* SVG图案自动重复，渐变覆盖整个屏幕 */
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+}   
+
+        
+        .container {
+            background-color: white;
+            max-width: 700px;
+            width: 100%;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(139, 90, 43, 0.15);
+            padding: 30px;
+            overflow: hidden;
+            border: 2px solid #8B5A2B;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            color: #8B5A2B;
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            font-weight: 400; /* Abril Fatface 通常是 400 字重 */
+            font-family: 'Abril Fatface'; /* 主要修改这里 */
+                 /* font-style: normal; 建议去掉斜体，因为 Abril Fatface 本身就很优雅 */
+            text-shadow: 2px 2px 4px rgba(139, 90, 43, 0.2);
+}
+
+
+        
+        .tagline {
+            color: #FFB5C5;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+        
+        .input-section, .output-section {
+            margin-bottom: 25px;
+            position: relative;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #8B5A2B;
+        }
+        
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #FFB5C5;
+            border-radius: 8px;
+            font-size: 16px;
+            resize: vertical;
+            transition: border-color 0.3s;
+            background-color: #FFF8F8;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: #8B5A2B;
+        }
+        
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            margin: 30px 0;
+        }
+        
+        button {
+            flex: 1;
+            padding: 12px 20px;
+            background-color: #8B5A2B;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        button:hover {
+            background-color: #7a4c25;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(139, 90, 43, 0.2);
+        }
+        
+        #decrypt-btn {
+            background-color: #FFB5C5;
+            color: #444;
+        }
+        
+        #decrypt-btn:hover {
+            background-color: #f5a5b8;
+        }
+        
+        .output-section {
+            position: relative;
+        }
+        
+        .copy-btn {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 5px 10px;
+            background-color: #FFB5C5;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background-color 0.3s;
+            color: #444;
+        }
+        
+        .copy-btn:hover {
+            background-color: #f5a5b8;
+        }
+        
+        @media (max-width: 600px) {
+            .buttons {
+                flex-direction: column;
+            }
+            
+            button {
+                margin-bottom: 10px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+        
+        .logo {
+            font-weight: 700;
+            color: #8B5A2B;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo"><3<3<3</div>
+            <h1> Judasixia Code</h1>
+            <p class="tagline">talk in my love language</p>
+        </header>
+        
+        <div class="input-section">
+            <label for="input-text">Input Text:</label>
+            <textarea id="input-text" rows="4" placeholder="Enter text to encrypt or decrypt..."></textarea>
+        </div>
+        
+        <div class="buttons">
+            <button id="encrypt-btn">Encrypt</button>
+            <button id="decrypt-btn">Decrypt</button>
+        </div>
+        
+        <div class="output-section">
+            <label for="output-text">Result:</label>
+            <textarea id="output-text" rows="4" readonly placeholder="Result will appear here..."></textarea>
+            <button class="copy-btn" id="copy-btn">Copy</button>
+        </div>
+    </div>
+
+    <script>
+        // 定义QWERTY键盘行
+        const keyboardRows = [
+            'qwertyuiop',
+            'asdfghjkl',
+            'zxcvbnm'
+        ];
+        
+        // 获取DOM元素
+        const inputText = document.getElementById('input-text');
+        const outputText = document.getElementById('output-text');
+        const encryptBtn = document.getElementById('encrypt-btn');
+        const decryptBtn = document.getElementById('decrypt-btn');
+        const copyBtn = document.getElementById('copy-btn');
+        
+        // 查找字符在键盘行中的位置
+        function findCharPosition(char) {
+            const lowerChar = char.toLowerCase();
+            for (let rowIndex = 0; rowIndex < keyboardRows.length; rowIndex++) {
+                const row = keyboardRows[rowIndex];
+                const charIndex = row.indexOf(lowerChar);
+                if (charIndex !== -1) {
+                    return { rowIndex, charIndex };
+                }
+            }
+            return null; // 不在键盘行中（如标点符号、数字等）
+        }
+        
+        // 对单个字符进行平移
+        function shiftChar(char, shiftAmount, direction = 1) {
+            // 非字母字符保持不变
+            if (!/[a-zA-Z]/.test(char)) {
+                return char;
+            }
+            
+            const position = findCharPosition(char);
+            if (!position) return char;
+            
+            const { rowIndex, charIndex } = position;
+            const row = keyboardRows[rowIndex];
+            const rowLength = row.length;
+            
+            // 计算新的位置（考虑循环）
+            let newIndex;
+            if (direction === 1) {
+                // 加密：向右平移
+                newIndex = (charIndex + shiftAmount) % rowLength;
+            } else {
+                // 解密：向左平移
+                newIndex = (charIndex - shiftAmount) % rowLength;
+                if (newIndex < 0) newIndex += rowLength;
+            }
+            
+            // 获取新字符
+            let newChar = row[newIndex];
+            
+            // 保持原始大小写
+            if (char === char.toUpperCase()) {
+                newChar = newChar.toUpperCase();
+            }
+            
+            return newChar;
+        }
+        
+        // 加密或解密文本
+        function processText(text, isEncrypt = true) {
+            // 使用正则表达式分割文本为单词和非单词部分
+            const wordRegex = /[a-zA-Z]+|[^a-zA-Z]+/g;
+            const parts = text.match(wordRegex) || [];
+            
+            const resultParts = parts.map(part => {
+                // 如果不是字母组成的单词，直接返回
+                if (!/^[a-zA-Z]+$/.test(part)) {
+                    return part;
+                }
+                
+                // 计算单词长度作为平移量
+                const shiftAmount = part.length;
+                
+                // 对每个字符进行平移
+                const shiftedWord = part.split('').map(char => 
+                    shiftChar(char, shiftAmount, isEncrypt ? 1 : -1)
+                ).join('');
+                
+                return shiftedWord;
+            });
+            
+            return resultParts.join('');
+        }
+        
+        // 加密按钮点击事件
+        encryptBtn.addEventListener('click', () => {
+            const input = inputText.value.trim();
+            if (!input) {
+                alert('Please enter text to encrypt!');
+                return;
+            }
+            
+            const encrypted = processText(input, true);
+            outputText.value = encrypted;
+        });
+        
+        // 解密按钮点击事件
+        decryptBtn.addEventListener('click', () => {
+            const input = inputText.value.trim();
+            if (!input) {
+                alert('Please enter text to decrypt!');
+                return;
+            }
+            
+            const decrypted = processText(input, false);
+            outputText.value = decrypted;
+        });
+        
+        // 复制按钮点击事件
+        copyBtn.addEventListener('click', () => {
+            if (!outputText.value) {
+                alert('No content to copy!');
+                return;
+            }
+            
+            outputText.select();
+            document.execCommand('copy');
+            alert('Copied to clipboard!');
+        });
+        
+        // 添加键盘快捷键支持
+        document.addEventListener('keydown', (e) => {
+            // Ctrl+E 加密
+            if (e.ctrlKey && e.key === 'e') {
+                e.preventDefault();
+                encryptBtn.click();
+            }
+            // Ctrl+D 解密
+            else if (e.ctrlKey && e.key === 'd') {
+                e.preventDefault();
+                decryptBtn.click();
+            }
+            // Ctrl+C 复制结果
+            else if (e.ctrlKey && e.key === 'c' && document.activeElement === outputText) {
+                // 允许正常的复制行为，不需要额外处理
+            }
+        });
+    </script>
+</body>
+</html>
